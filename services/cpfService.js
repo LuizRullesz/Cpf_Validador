@@ -20,5 +20,13 @@ function validarCPF(cpf) {
     return resto === parseInt(cpf.charAt(10));
   }
   
-  module.exports = { validarCPF };
+
+  function validarEMAIL(email) {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/i
+    return regex.test(email);
+  }
+
+
+  
+  module.exports = { validarCPF, validarEMAIL };
   

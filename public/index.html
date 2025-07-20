@@ -2,18 +2,37 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>Validador de CPF</title>
+  <title>Validador de CPF e E-mail</title>
   <style>
     body {
       font-family: sans-serif;
       background: #f9f9f9;
-      padding: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
+
+    .container {
+      text-align: center;
+      background: #fff;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+
     input, button {
       padding: 0.5rem;
       font-size: 1rem;
-      margin-right: 0.5rem;
+      margin-top: 0.5rem;
+      width: 250px;
     }
+
+    button {
+      cursor: pointer;
+      margin-bottom: 0.5rem;
+    }
+
     #resultado {
       margin-top: 1rem;
       font-weight: bold;
@@ -22,12 +41,17 @@
 </head>
 <body>
 
-  <h1>Validador de CPF</h1>
+  <div class="container">
+    <h1>Validador de CPF e E-mail</h1>
 
-  <input type="text" id="cpf" placeholder="Digite o CPF">
-  <button onclick="validarCPF()">Validar</button>
+    <input type="text" id="cpf" placeholder="Digite o CPF"><br>
+    <button onclick="validarCPF()">Validar CPF</button><br>
 
-  <div id="resultado"></div>
+    <input type="text" id="EMAIL" placeholder="Digite o Email"><br>
+    <button onclick="validarEMAIL()">Validar E-mail</button>
+
+    <div id="resultado"></div>
+  </div>
 
   <script>
     async function validarCPF() {
@@ -46,14 +70,41 @@
 
       if (resposta.ok) {
         if (dados.valido) {
-          resultado.innerText = `O CPF ${dados.cpf} é válido`;
+          resultado.innerText = `✅ O CPF ${dados.cpf} é válido`;
           resultado.style.color = 'green';
         } else {
-          resultado.innerText = `O CPF ${dados.cpf} é inválido`;
+          resultado.innerText = `❌ O CPF ${dados.cpf} é inválido`;
           resultado.style.color = 'red';
         }
       } else {
-        resultado.innerText = ` Erro: ${dados.erro || 'Erro desconhecido'}`;
+        resultado.innerText = `⚠️ Erro: ${dados.erro || 'Erro desconhecido'}`;
+        resultado.style.color = 'orange';
+      }
+    }
+
+    async function validarEMAIL() {
+      const email = document.getElementById('EMAIL').value;
+      const resposta = await fetch('/api/validar-email', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email })
+      });
+
+      const dados = await resposta.json();
+      const resultado = document.getElementById('resultado');
+
+      if (resposta.ok) {
+        if (dados.valido) {
+          resultado.innerText = `✅ O e-mail ${dados.email} é válido`;
+          resultado.style.color = 'green';
+        } else {
+          resultado.innerText = `❌ O e-mail ${dados.email} é inválido`;
+          resultado.style.color = 'red';
+        }
+      } else {
+        resultado.innerText = `⚠️ Erro: ${dados.erro || 'Erro desconhecido'}`;
         resultado.style.color = 'orange';
       }
     }
